@@ -42,7 +42,7 @@ function App() {
           return (
             <div
               style={{
-                border: "3px solid red",
+                border: "3px solid green",
                 marginBottom: "10px",
                 display: "flex",
                 justifyContent: "space-evenly",
