@@ -1,6 +1,7 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import Axios from "axios";
+import Navbar from "./components/navbar/navbar";
 
 function App() {
   const [contactList, setcontactList] = useState([]);
@@ -15,13 +16,13 @@ function App() {
   const [note, setNote] = useState("");
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/get-contact-list").then((response) => {
+    Axios.get("http://54.82.44.51:3001/get-contact-list").then((response) => {
       setcontactList(response.data);
     });
   }, []);
 
   const addList = () => {
-    Axios.post("http://localhost:3001/add-contact-list", {
+    Axios.post("http://54.82.44.51:3001/add-contact-list", {
       firstName,
       lastName,
       email,
@@ -37,6 +38,8 @@ function App() {
 
   return (
     <div className="App">
+      <Navbar />
+      <h1>Contact List Web App</h1>
       <div>
         {contactList.map((contactlists) => {
           return (
@@ -45,7 +48,7 @@ function App() {
                 border: "3px solid black",
                 marginBottom: "10px",
                 display: "flex",
-                justifyContent: "space-evenly",
+                justifyContent: "space-between",
               }}
             >
               <h3>First Name:{contactlists.firstName} </h3>
