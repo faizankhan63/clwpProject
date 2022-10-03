@@ -1,18 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
+import style from "./navbar.module.scss";
 
 function Navbar() {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        borderBottom: "4px solid red",
-        marginBottom: 15,
-      }}
-    >
+    <div className={style.navDiv}>
       <h3>add logo here...</h3>
       <h1>Demo Navbar</h1>
-      <button>Logout Button</button>
+      <Link className="link" to={"/authPage"}>
+        Logout
+      </Link>
     </div>
   );
 }
