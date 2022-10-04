@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   FacebookLoginButton,
@@ -9,49 +9,26 @@ import {
 import style from "./auth.module.scss";
 
 function AuthPage() {
-  const [signup, setSignup] = useState(true);
+  const github = () => {
+    window.open("http://localhost:3001/auth/github", "_self");
+  };
+
+  const google = () => {
+    window.open("http://localhost:3001/auth/google", "_self");
+  };
 
   return (
     <div>
       <div className={style.authFormContainer}>
         <form className={style.authForm}>
           <div className={style.authFormContent}>
-            <div className={style.choiceDiv}>
-              <span onClick={() => setSignup(true)}>SignUp</span>
-              <span onClick={() => setSignup(false)}>SignIn</span>
-            </div>
-            {signup ? (
-              <>
-                <h3 className={style.authFormTitle}>Sign Up</h3>
-                <div className={style.inputDiv}>
-                  <input type="text" placeholder="Enter your name" />
-                </div>
-                <div className={style.inputDiv}>
-                  <input type="email" placeholder="Enter email" />
-                </div>
-                <div className={style.inputDiv}>
-                  <input type="password" placeholder="Enter password" />
-                </div>
-              </>
-            ) : (
-              <>
-                <h3 className={style.authFormTitle}>Sign In</h3>
-                <div className={style.inputDiv}>
-                  <input type="email" placeholder="Enter email" />
-                </div>
-                <div className={style.inputDiv}>
-                  <input type="password" placeholder="Enter password" />
-                </div>
-              </>
-            )}
-
-            <div className={style.btnDiv}>
-              <Link to={"/"}>Login Dummy</Link>
-            </div>
             <div className={style.socialDiv}>
               <FacebookLoginButton />
-              <GoogleLoginButton />
-              <GithubLoginButton />
+              <GoogleLoginButton onClick={google} />
+              <GithubLoginButton onClick={github} />
+            </div>
+            <div className={style.btnDiv}>
+              <Link to={"/"}>Login Dummy</Link>
             </div>
           </div>
         </form>
