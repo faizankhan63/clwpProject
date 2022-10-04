@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import Axios from "axios";
 
 import Navbar from "../../components/navbar/navbar";
+import { useSearchParams } from "react-router-dom";
 function HomePage() {
   const [contactList, setcontactList] = useState([]);
-
+  const [params] = useSearchParams();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -14,7 +15,8 @@ function HomePage() {
   const [image, setImage] = useState("");
   const [dob, setDob] = useState("");
   const [note, setNote] = useState("");
-
+  // const [user, setUser] = useState(null);
+  console.log(params);
   useEffect(() => {
     Axios.get("http://54.82.44.51:3001/get-contact-list").then((response) => {
       setcontactList(response.data);
@@ -35,6 +37,7 @@ function HomePage() {
       alert("List added");
     });
   };
+
   return (
     <div>
       <Navbar />

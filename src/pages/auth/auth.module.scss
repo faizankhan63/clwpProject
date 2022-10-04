@@ -24,38 +24,6 @@
   padding-right: 12%;
 }
 
-.authFormTitle {
-  text-align: center;
-  margin-bottom: 1em;
-  font-size: 24px;
-  color: rgb(34, 34, 34);
-  font-weight: 800;
-}
-
-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: rgb(34, 34, 34);
-}
-
-.inputDiv {
-  margin-bottom: 10px;
-}
 .btnDiv {
   margin-bottom: 10px;
-}
-.choiceDiv {
-  display: flex;
-  justify-content: space-around;
-  span {
-    padding: 5px;
-    border: 1px solid white;
-    border-radius: 8px;
-    background-color: black;
-    color: white;
-    width: 100%;
-    font-size: 30px;
-    font-weight: bold;
-    cursor: pointer;
-  }
 }
