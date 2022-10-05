@@ -1,0 +1,17 @@
+.listContainer {
+  border: 1px solid black;
+}
+.listTitle {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  font-size: larger;
+  font-weight: bold;
+  text-decoration: wavy;
+}
+.list {
+  margin-bottom: "10px";
+  background-color: grey;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+}

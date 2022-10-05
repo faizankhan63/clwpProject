@@ -1,0 +1,27 @@
+.main {
+  display: flex;
+  .image {
+    height: 50px;
+    width: 50px;
+    display: flex;
+    border-radius: 70px;
+    justify-content: center;
+    align-items: center;
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .initials {
+    margin: 0px 20px;
+    color: white;
+    background-color: grey;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: inherit;
+  }
+}

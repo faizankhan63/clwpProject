@@ -1,6 +1,14 @@
 .navDiv {
   display: flex;
-  justify-content: space-evenly;
-  background-color: burlywood;
+  justify-content: space-between;
   align-items: center;
+  border-bottom: 2px solid black;
+  margin-bottom: 20px;
+  img {
+    cursor: pointer;
+  }
+  .userInfoDiv {
+    display: flex;
+    align-items: center;
+  }
 }

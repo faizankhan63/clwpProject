@@ -1,144 +1,87 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from "react";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Axios from "axios";
 
-import Navbar from "../../components/navbar/navbar";
-import { useSearchParams } from "react-router-dom";
+import Navbar from "../../components/navbar/index";
+
+import editIcon from "../../assets/icons/Edit.svg";
+import deleteIcon from "../../assets/icons/delete.svg";
+import style from "./home.module.scss";
+import EditSection from "./editSection/editSection";
 function HomePage() {
   const [contactList, setcontactList] = useState([]);
   const [params] = useSearchParams();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [whatsappNumber, setWhatsappNumber] = useState("");
-  const [image, setImage] = useState("");
-  const [dob, setDob] = useState("");
-  const [note, setNote] = useState("");
-  // const [user, setUser] = useState(null);
+  const [toggle, setToggle] = useState(false);
+  const [edit, setEdit] = useState();
+
   console.log(params);
   useEffect(() => {
-    Axios.get("http://54.82.44.51:3001/get-contact-list").then((response) => {
+    Axios.get("http://localhost:3001/get-contact-list").then((response) => {
       setcontactList(response.data);
     });
   }, []);
 
-  const addList = () => {
-    Axios.post("http://54.82.44.51:3001/add-contact-list", {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      whatsAppNumber: whatsappNumber,
-      image,
-      userDOB: dob,
-      note,
-    }).then((response) => {
-      alert("List added");
-    });
-  };
+  console.log(contactList, "contactList");
 
   return (
-    <div>
+    <>
       <Navbar />
-      <h1>Contact List Web App</h1>
-      <div>
-        {contactList.map((contactlists) => {
+      <div className={style.listTitle}>
+        <span>Image</span>
+        <span>First Name</span>
+        <span>Last Name</span>
+        <span>Email</span>
+        <span>Phone#</span>
+        <span>Whatsapp#</span>
+        <span>DOB</span>
+        <span>Note</span>
+      </div>
+      <div className={style.listContainer}>
+        {contactList.map((contactlists, index) => {
           return (
-            <div
-              style={{
-                border: "3px solid black",
-                marginBottom: "10px",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <h3>First Name:{contactlists.firstName} </h3>
-              <h3>Last Name:{contactlists.lastName} </h3>
-              <h3>Email:{contactlists.email} </h3>
-              <h3>phone number:{contactlists.phoneNumber}</h3>
-              <h3>whatsapp number:{contactlists.whatsAppNumber} </h3>
-              <h3>image:{contactlists.image} </h3>
-              <h3>DOB:{contactlists.userDOB} </h3>
-              <h3>Note:{contactlists.note} </h3>
-            </div>
+            <>
+              <div className={style.list} key={index}>
+                <h3>{contactlists.image} </h3>
+                <h3>{contactlists.firstName} </h3>
+                <h3>{contactlists.lastName} </h3>
+                <h3>{contactlists.email} </h3>
+                <h3>{contactlists.phoneNumber}</h3>
+                <h3>{contactlists.whatsAppNumber} </h3>
+                <h3>{contactlists.userDOB} </h3>
+                <h3>{contactlists.note} </h3>
+                <div>
+                  <img
+                    onClick={() => {
+                      setEdit(index);
+                      setToggle(false);
+                    }}
+                    src={editIcon}
+                    width={20}
+                  />
+                  <img src={deleteIcon} />
+                </div>
+              </div>
+              {index === edit && (
+                <EditSection setEdit={setEdit} setToggle={setToggle} />
+              )}
+            </>
           );
         })}
-        <div
-          style={{
-            marginTop: "40px",
-            display: "flex",
-            justifyContent: "space-evenly",
+      </div>
+      {toggle && <EditSection setToggle={setToggle} setEdit={setEdit} />}
+      <div style={{ marginTop: 20 }}>
+        <button
+          onClick={() => {
+            setEdit(null);
+            setToggle(true);
           }}
         >
-          <div>
-            <span>First name: </span>
-            <input
-              onChange={(event) => setFirstName(event.target.value)}
-              type={"text"}
-            />
-          </div>
-          <div>
-            <span>Last name: </span>
-            <input
-              onChange={(event) => setLastName(event.target.value)}
-              type={"text"}
-            />
-          </div>
-          <div>
-            <span>email: </span>
-            <input
-              onChange={(event) => setEmail(event.target.value)}
-              type={"text"}
-            />
-          </div>
-          <div>
-            <span>phone#: </span>
-            <input
-              onChange={(event) => setPhoneNumber(event.target.value)}
-              type={"text"}
-            />
-          </div>
-          <div>
-            <span>whatsapp#: </span>
-            <input
-              onChange={(event) => setWhatsappNumber(event.target.value)}
-              type={"text"}
-            />
-          </div>
-          <div>
-            <span>image: </span>
-            <input
-              onChange={(event) => setImage(event.target.value)}
-              type={"text"}
-            />
-          </div>
-          <div>
-            <span>dob: </span>
-            <input
-              onChange={(event) => setDob(event.target.value)}
-              type={"text"}
-            />
-          </div>
-          <div>
-            <span>note: </span>
-            <input
-              onChange={(event) => setNote(event.target.value)}
-              type={"text"}
-            />
-          </div>
-        </div>
+          Add
+        </button>
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "30px",
-        }}
-      >
-        <button onClick={addList}>Add</button>
-      </div>
-    </div>
+    </>
   );
 }
 
