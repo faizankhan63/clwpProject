@@ -17,13 +17,17 @@ function AuthPage() {
     window.open("http://localhost:3001/auth/google", "_self");
   };
 
+  const facebook = () => {
+    window.open("http://localhost:3001/auth/facebook", "_self");
+  };
+
   return (
     <div>
       <div className={style.authFormContainer}>
         <form className={style.authForm}>
           <div className={style.authFormContent}>
             <div className={style.socialDiv}>
-              <FacebookLoginButton />
+              <FacebookLoginButton onClick={facebook} />
               <GoogleLoginButton onClick={google} />
               <GithubLoginButton onClick={github} />
             </div>
