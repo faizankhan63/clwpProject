@@ -2,26 +2,59 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import moment from "moment";
 import Axios from "axios";
 
 import Navbar from "../../components/navbar/index";
+import Modal from "../../components/modal";
+import Button from "../../components/button";
 
 import editIcon from "../../assets/icons/Edit.svg";
 import deleteIcon from "../../assets/icons/delete.svg";
 import style from "./home.module.scss";
 import EditSection from "./editSection/editSection";
+import { createNotification } from "../../components/react-notification";
 function HomePage() {
   const [contactList, setcontactList] = useState([]);
   const [params] = useSearchParams();
   const [toggle, setToggle] = useState(false);
+  const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState();
 
   console.log(params);
+
   useEffect(() => {
     Axios.get("http://localhost:3001/get-contact-list").then((response) => {
       setcontactList(response.data);
     });
   }, []);
+
+  const deleteContact = async (id) => {
+    try {
+      Axios.delete(`http://localhost:3001/delete-contact-list/${id}`);
+    } catch (err) {
+      createNotification(
+        "error",
+        "Error",
+        err?.response?.data?.message || "Server Error"
+      );
+      console.error(err);
+    }
+  };
+
+  const onAdd = (value) => {
+    setcontactList((prev) => [...prev, value]);
+  };
+
+  const onEdit = (value) => {
+    setcontactList((prev) => {
+      const newArr = [...prev];
+      const indexFound = newArr.findIndex((e) => e._id === value._id);
+      newArr[indexFound] = value;
+
+      return newArr;
+    });
+  };
 
   console.log(contactList, "contactList");
 
@@ -49,7 +82,7 @@ function HomePage() {
                 <h3>{contactlists.email} </h3>
                 <h3>{contactlists.phoneNumber}</h3>
                 <h3>{contactlists.whatsAppNumber} </h3>
-                <h3>{contactlists.userDOB} </h3>
+                <h3>{moment(contactlists.userDOB).format("DD/MM/YYYY")} </h3>
                 <h3>{contactlists.note} </h3>
                 <div>
                   <img
@@ -60,27 +93,57 @@ function HomePage() {
                     src={editIcon}
                     width={20}
                   />
-                  <img src={deleteIcon} />
+                  <img
+                    src={deleteIcon}
+                    onClick={() => setOpen(contactlists._id)}
+                  />
                 </div>
               </div>
               {index === edit && (
-                <EditSection setEdit={setEdit} setToggle={setToggle} />
+                <EditSection
+                  onEdit={onEdit}
+                  data={contactlists}
+                  setEdit={setEdit}
+                  setToggle={setToggle}
+                />
               )}
             </>
           );
         })}
       </div>
-      {toggle && <EditSection setToggle={setToggle} setEdit={setEdit} />}
+      {toggle && (
+        <EditSection onAdd={onAdd} setToggle={setToggle} setEdit={setEdit} />
+      )}
       <div style={{ marginTop: 20 }}>
-        <button
-          onClick={() => {
+        <Button
+          handleClick={() => {
             setEdit(null);
             setToggle(true);
           }}
-        >
-          Add
-        </button>
+          text="Add"
+        />
       </div>
+
+      <Modal open={open} handleClose={() => setOpen(false)}>
+        <div className={style.modalHeader}>
+          <h3>Delete Contact</h3>
+          <p className={style.warningText}>
+            Are you sure you want to delete this contact?
+          </p>
+          <Button
+            btnClass={style.buttonStyle}
+            text={"Yep"}
+            handleClick={() => {
+              deleteContact(open);
+
+              setOpen(false);
+            }}
+          />
+          <h3 className={style.cancelText} onClick={() => setOpen(false)}>
+            Whoops, No, cancel this
+          </h3>
+        </div>
+      </Modal>
     </>
   );
 }

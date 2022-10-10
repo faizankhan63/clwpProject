@@ -1,0 +1,60 @@
+@import 'styles/_breakpoints.scss';
+@import 'styles/_colors.scss';
+@import 'styles/_mixin.scss';
+
+.colrBg {
+  background-color: red !important;
+}
+
+.wraper {
+  width: 100%;
+  .lbl {
+    @include font29;
+    @include p-small;
+    color: $neutral1;
+    font-family: 'Montserrat';
+    font-style: normal;
+    margin-bottom: 5px;
+    text-transform: capitalize;
+    @media (max-width: $md) {
+      margin-bottom: 8px;
+    }
+    @media (max-width: $xxs) {
+      margin-bottom: 5px;
+    }
+  }
+  .selectClass {
+    position: relative;
+    z-index: 1000;
+    & svg {
+      // fill: #39695b;
+    }
+    & option {
+      background-color: red;
+      z-index: 5;
+    }
+  }
+  .selectBox {
+    width: 100%;
+    margin-top: 4px;
+    position: relative;
+    border-radius: 5px;
+    height: 41px;
+  }
+}
+.errorMessage {
+  position: absolute;
+  display: block;
+  font-size: 12px;
+  margin-left: 5px;
+  color: #ff5050;
+}
+
+input {
+  height: 100%;
+}
+
+.css-1hb7zxy-IndicatorsContainer {
+  align-items: flex-start !important;
+  margin-top: 10px;
+}

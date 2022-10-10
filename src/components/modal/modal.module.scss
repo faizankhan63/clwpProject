@@ -1,0 +1,29 @@
+// @import 'styles/_breakpoints.scss';
+// @import 'styles/_colors.scss';
+// @import 'styles/_mixin.scss';
+
+.modalWrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 250000;
+  padding: 20px 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  .modalContentWrapper {
+    position: relative;
+    overflow-y: auto;
+    max-width: 301px;
+    width: 100%;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 8px;
+    &::-webkit-scrollbar:vertical {
+      display: none;
+    }
+    .body {
+      padding: 30px;
+    }
+  }
+}
