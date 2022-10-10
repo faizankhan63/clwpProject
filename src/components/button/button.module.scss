@@ -1,0 +1,43 @@
+// @import 'styles/_breakpoints.scss';
+// @import 'styles/_colors.scss';
+// @import 'styles/_mixin.scss';
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: 48px;
+  padding-top: calc(5px + (15 - 5) * (100vw - 280px) / (2560 - 280));
+  padding-bottom: calc(5px + (15 - 5) * (100vw - 280px) / (2560 - 280));
+  padding-left: calc(11px + (30 - 11) * (100vw - 280px) / (2560 - 280));
+  padding-right: calc(11px + (40 - 11) * (100vw - 280px) / (2560 - 280));
+  background-color: grey;
+  border-radius: 45px;
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+  &:disabled {
+    background-color: #9da1aa;
+    color: #363636;
+  }
+
+  .img {
+    margin-left: calc(6px + (19 - 6) * (100vw - 280px) / (2560 - 280));
+    width: calc(11px + (34 - 11) * (100vw - 280px) / (2560 - 280));
+    height: calc(8px + (25 - 8) * (100vw - 280px) / (2560 - 280));
+  }
+
+  .img1 {
+    margin-right: calc(6px + (7 - 6) * (100vw - 280px) / (2560 - 280));
+    width: 20px;
+    height: 20px;
+    z-index: 2;
+  }
+
+  .btnTitle {
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+  }
+}

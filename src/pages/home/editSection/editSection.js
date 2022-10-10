@@ -1,51 +1,97 @@
 /* eslint-disable jsx-a11y/alt-text */
 import Axios from "axios";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import TextField from "../../../components/textfield";
+import DatePicker from "../../../components/date-picker";
+
+import greenCrossIcon from "../../../assets/images/crossIcon.svg";
 
 import style from "./editSection.module.scss";
+import Button from "../../../components/button";
+import { createNotification } from "../../../components/react-notification";
 
-function EditSection({ setEdit, setToggle }) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [whatsappNumber, setWhatsappNumber] = useState("");
-  const [image, setImage] = useState("");
-  const [dob, setDob] = useState("");
-  const [note, setNote] = useState("");
-
+function EditSection({ setEdit, onAdd, onEdit, setToggle, data }) {
   const {
     register,
-
+    handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
+    defaultValues: !data
+      ? {}
+      : {
+          ...data,
+          userDOB: new Date(data.userDOB),
+        },
     resolver: yupResolver(schema),
   });
 
-  const addList = () => {
-    Axios.post("http://localhost:3001/add-contact-list", {
+  const addList = async (values) => {
+    const {
       firstName,
       lastName,
       email,
       phoneNumber,
-      whatsAppNumber: whatsappNumber,
+      whatsAppNumber,
       image,
-      userDOB: dob,
+      userDOB,
       note,
-    }).then((response) => {
-      alert("List added");
-      setEdit(null);
-      setToggle(false);
-    });
+    } = values;
+    if (!data?._id) {
+      Axios.post("http://localhost:3001/add-contact-list", {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        whatsAppNumber,
+        image,
+        userDOB,
+        note,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            onAdd(response.data.contactlists);
+            setToggle(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err.response, "Error");
+        });
+    } else {
+      try {
+        const response = await Axios.put(
+          `http://localhost:3001/update-contact-list/${data._id}`,
+          {
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
+            whatsAppNumber,
+            image,
+            userDOB,
+            note,
+          }
+        );
+        onEdit(response.data.contactlists);
+        setEdit(null);
+        setToggle(false);
+      } catch (err) {
+        createNotification(
+          "error",
+          "Error",
+          err?.response?.data?.message || "Server Error"
+        );
+        console.error(err);
+      }
+    }
   };
 
   return (
     <>
-      <form className={style.editSection}>
+      <form onSubmit={handleSubmit(addList)} className={style.editSection}>
         <div>
           <TextField
             name={"image"}
@@ -53,7 +99,6 @@ function EditSection({ setEdit, setToggle }) {
             errorMessage={errors?.image?.message}
             placeholder={"Image"}
             wraperClass={style.inputWraper}
-            onChange={(event) => setImage(event.target.value)}
           />
         </div>
         <div>
@@ -63,7 +108,6 @@ function EditSection({ setEdit, setToggle }) {
             errorMessage={errors?.firstName?.message}
             placeholder={"First Name"}
             wraperClass={style.inputWraper}
-            onChange={(event) => setFirstName(event.target.value)}
           />
         </div>
         <div>
@@ -73,7 +117,6 @@ function EditSection({ setEdit, setToggle }) {
             errorMessage={errors?.lastName?.message}
             placeholder={"Last Name"}
             wraperClass={style.inputWraper}
-            onChange={(event) => setLastName(event.target.value)}
           />
         </div>
         <div>
@@ -83,7 +126,6 @@ function EditSection({ setEdit, setToggle }) {
             errorMessage={errors?.email?.message}
             placeholder={"Email"}
             wraperClass={style.inputWraper}
-            onChange={(event) => setEmail(event.target.value)}
           />
         </div>
         <div>
@@ -92,29 +134,28 @@ function EditSection({ setEdit, setToggle }) {
             register={register}
             errorMessage={errors?.phoneNumber?.message}
             placeholder={"Phone number"}
+            type="number"
             wraperClass={style.inputWraper}
-            onChange={(event) => setPhoneNumber(event.target.value)}
           />
         </div>
         <div>
           <TextField
             name={"whatsAppNumber"}
             register={register}
+            type="number"
             errorMessage={errors?.whatsAppNumber?.message}
             placeholder={"whatsapp number"}
             wraperClass={style.inputWraper}
-            onChange={(event) => setWhatsappNumber(event.target.value)}
           />
         </div>
 
         <div>
-          <TextField
+          <DatePicker
             name={"userDOB"}
-            register={register}
+            id="1"
+            placeholder="Date"
+            control={control}
             errorMessage={errors?.userDOB?.message}
-            placeholder={"DOB"}
-            wraperClass={style.inputWraper}
-            onChange={(event) => setDob(event.target.value)}
           />
         </div>
         <div>
@@ -124,19 +165,19 @@ function EditSection({ setEdit, setToggle }) {
             errorMessage={errors?.note?.message}
             placeholder={"Note"}
             wraperClass={style.inputWraper}
-            onChange={(event) => setNote(event.target.value)}
           />
         </div>
-        <div>
-          <button
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <img
+            src={greenCrossIcon}
+            className={style.crossIcon}
             onClick={() => {
               setEdit(null);
               setToggle(false);
             }}
-          >
-            Close
-          </button>
-          <button onClick={addList}>Save</button>
+          />
+
+          <Button type="submit" text={"Save"} />
         </div>
       </form>
     </>
@@ -150,10 +191,10 @@ const schema = yup
     image: yup.string().required().typeError("image is required"),
     firstName: yup.string().required().typeError("first name is required"),
     lastName: yup.string().required().typeError("last name is required"),
-    email: yup.string().required().typeError("email is required"),
-    phoneNumber: yup.string().required().typeError("Phonenumber is required"),
+    email: yup.string().email().required().typeError("email is required"),
+    phoneNumber: yup.number().required().typeError("Phonenumber is required"),
     whatsAppNumber: yup
-      .string()
+      .number()
       .required()
       .typeError("whatsapp number is required"),
     userDOB: yup.string().required().typeError("date of birth is required"),
