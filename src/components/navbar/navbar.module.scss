@@ -10,5 +10,8 @@
   .userInfoDiv {
     display: flex;
     align-items: center;
+    .userLogo {
+      margin-right: 20px;
+    }
   }
 }

@@ -16,18 +16,37 @@ import EditSection from "./editSection/editSection";
 import { createNotification } from "../../components/react-notification";
 function HomePage() {
   const [contactList, setcontactList] = useState([]);
+  const [user, setUser] = useState();
   const [params] = useSearchParams();
   const [toggle, setToggle] = useState(false);
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState();
 
-  console.log(params);
+  console.log(params.get("userId"), "prams");
 
   useEffect(() => {
     Axios.get("http://localhost:3001/get-contact-list").then((response) => {
       setcontactList(response.data);
     });
   }, []);
+
+  useEffect(() => {
+    getUser(params.get("userId"));
+  }, []);
+
+  const getUser = async (id) => {
+    try {
+      const res = await Axios.get(`http://localhost:3001/get-user/${id}`);
+      setUser(res.data.user);
+    } catch (err) {
+      createNotification(
+        "error",
+        "Error",
+        err?.response?.data?.message || "Server Error"
+      );
+      console.error(err);
+    }
+  };
 
   const deleteContact = async (id) => {
     try {
@@ -56,11 +75,11 @@ function HomePage() {
     });
   };
 
-  console.log(contactList, "contactList");
+  console.log(user, "Userrrrr");
 
   return (
     <>
-      <Navbar />
+      <Navbar user={user} />
       <div className={style.listTitle}>
         <span>Image</span>
         <span>First Name</span>
